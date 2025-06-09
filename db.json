@@ -1,5 +1,333 @@
 {
-  "api" : [
+  "/api/auth/login": {
+    "success": true,
+    "data": {
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwidXNlcm5hbWUiOiJhZ",
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwidHlwZSI6In",
+      "user": {
+        "id": 1,
+        "username": "admin",
+        "email": "admin@cloudpanel.com",
+        "role": "admin",
+        "permissions": ["read", "write", "delete"]
+      }
+    }
+  },
 
-  ]
+  "/api/dashboard/overview": {
+    "success": true,
+    "data": {
+      "servers": {
+        "total": 25,
+        "active": 22,
+        "inactive": 3,
+        "error": 0
+      },
+      "resources": {
+        "cpu": { "used": 65.2, "total": 100, "unit": "%" },
+        "memory": { "used": 78.5, "total": 100, "unit": "%" },
+        "storage": { "used": 45.8, "total": 100, "unit": "%" },
+        "network": { "used": 2.3, "total": 10, "unit": "Gbps" }
+      },
+      "alerts": [
+        {
+          "id": 1,
+          "type": "critical",
+          "title": "High CPU Usage",
+          "message": "Server db-prod-01 CPU usage exceeded 90%",
+          "timestamp": "2024-01-15T10:30:00Z",
+          "server_id": "srv-002"
+        },
+        {
+          "id": 2,
+          "type": "warning",
+          "title": "Memory Usage High",
+          "message": "Server web-prod-02 memory usage above 85%",
+          "timestamp": "2024-01-15T09:15:00Z",
+          "server_id": "srv-003"
+        }
+      ],
+      "recent_activities": [
+        {
+          "id": 1,
+          "action": "server_restart",
+          "description": "Server web-prod-01 restarted by admin",
+          "timestamp": "2024-01-15T11:00:00Z",
+          "user": "admin"
+        },
+        {
+          "id": 2,
+          "action": "resource_allocated",
+          "description": "Added 100GB storage to main pool",
+          "timestamp": "2024-01-15T10:45:00Z",
+          "user": "developer"
+        }
+      ]
+    }
+  },
+
+  "/api/dashboard/metrics": {
+    "success": true,
+    "data": {
+      "cpu": [
+        { "timestamp": "2024-01-15T10:00:00Z", "value": 65.2 },
+        { "timestamp": "2024-01-15T10:05:00Z", "value": 68.1 },
+        { "timestamp": "2024-01-15T10:10:00Z", "value": 72.3 },
+        { "timestamp": "2024-01-15T10:15:00Z", "value": 69.7 },
+        { "timestamp": "2024-01-15T10:20:00Z", "value": 71.2 }
+      ],
+      "memory": [
+        { "timestamp": "2024-01-15T10:00:00Z", "value": 78.5 },
+        { "timestamp": "2024-01-15T10:05:00Z", "value": 79.2 },
+        { "timestamp": "2024-01-15T10:10:00Z", "value": 81.1 },
+        { "timestamp": "2024-01-15T10:15:00Z", "value": 80.3 },
+        { "timestamp": "2024-01-15T10:20:00Z", "value": 82.7 }
+      ],
+      "network": [
+        { "timestamp": "2024-01-15T10:00:00Z", "value": 2.3 },
+        { "timestamp": "2024-01-15T10:05:00Z", "value": 2.7 },
+        { "timestamp": "2024-01-15T10:10:00Z", "value": 3.1 },
+        { "timestamp": "2024-01-15T10:15:00Z", "value": 2.9 },
+        { "timestamp": "2024-01-15T10:20:00Z", "value": 3.4 }
+      ]
+    }
+  },
+
+  "/api/servers?page=1&limit=10&search=&status=all": {
+    "success": true,
+    "data": {
+      "items": [
+        {
+          "id": "srv-001",
+          "name": "web-prod-01",
+          "ip": "192.168.1.10",
+          "public_ip": "203.45.67.89",
+          "status": "running",
+          "region": "us-east-1",
+          "instance_type": "t3.medium",
+          "cpu": 45.2,
+          "memory": 67.8,
+          "storage": 34.1,
+          "network_in": 1.2,
+          "network_out": 0.8,
+          "uptime": "15d 4h 32m",
+          "created_at": "2024-01-01T00:00:00Z",
+          "tags": ["production", "web", "frontend"]
+        },
+        {
+          "id": "srv-002",
+          "name": "db-prod-01",
+          "ip": "192.168.1.11",
+          "public_ip": "203.45.67.90",
+          "status": "running",
+          "region": "us-east-1",
+          "instance_type": "r5.large",
+          "cpu": 92.1,
+          "memory": 85.3,
+          "storage": 78.9,
+          "network_in": 2.1,
+          "network_out": 1.9,
+          "uptime": "25d 12h 15m",
+          "created_at": "2023-12-15T00:00:00Z",
+          "tags": ["production", "database", "mysql"]
+        },
+        {
+          "id": "srv-003",
+          "name": "web-prod-02",
+          "ip": "192.168.1.12",
+          "public_ip": "203.45.67.91",
+          "status": "stopped",
+          "region": "us-east-1",
+          "instance_type": "t3.medium",
+          "cpu": 0,
+          "memory": 0,
+          "storage": 45.2,
+          "network_in": 0,
+          "network_out": 0,
+          "uptime": "0m",
+          "created_at": "2024-01-10T00:00:00Z",
+          "tags": ["production", "web", "backend"]
+        }
+      ],
+      "pagination": {
+        "current_page": 1,
+        "total_pages": 9,
+        "total_items": 25,
+        "per_page": 10,
+        "has_next": true,
+        "has_prev": false
+      }
+    }
+  },
+
+  "/api/servers/srv-001": {
+    "success": true,
+    "data": {
+      "id": "srv-001",
+      "name": "web-prod-01",
+      "ip": "192.168.1.10",
+      "public_ip": "203.45.67.89",
+      "status": "running",
+      "region": "us-east-1",
+      "instance_type": "t3.medium",
+      "specifications": {
+        "cpu_cores": 2,
+        "memory_gb": 4,
+        "storage_gb": 100,
+        "network_gbps": 1
+      },
+      "current_metrics": {
+        "cpu": 45.2,
+        "memory": 67.8,
+        "storage": 34.1,
+        "network_in": 1.2,
+        "network_out": 0.8
+      },
+      "metrics_history": {
+        "cpu": [
+          { "timestamp": "2024-01-15T10:00:00Z", "value": 45.2 },
+          { "timestamp": "2024-01-15T10:05:00Z", "value": 48.1 },
+          { "timestamp": "2024-01-15T10:10:00Z", "value": 52.3 }
+        ],
+        "memory": [
+          { "timestamp": "2024-01-15T10:00:00Z", "value": 67.8 },
+          { "timestamp": "2024-01-15T10:05:00Z", "value": 69.2 },
+          { "timestamp": "2024-01-15T10:10:00Z", "value": 71.1 }
+        ]
+      },
+      "logs": [
+        {
+          "id": 1,
+          "timestamp": "2024-01-15T10:30:00Z",
+          "level": "info",
+          "service": "nginx",
+          "message": "Application started successfully on port 80"
+        },
+        {
+          "id": 2,
+          "timestamp": "2024-01-15T10:25:00Z",
+          "level": "warning",
+          "service": "system",
+          "message": "High memory usage detected: 85%"
+        },
+        {
+          "id": 3,
+          "timestamp": "2024-01-15T10:20:00Z",
+          "level": "error",
+          "service": "mysql",
+          "message": "Connection timeout to database slave"
+        }
+      ],
+      "uptime": "15d 4h 32m",
+      "created_at": "2024-01-01T00:00:00Z",
+      "tags": ["production", "web", "frontend"]
+    }
+  },
+
+  "/api/servers/srv-001/action": {
+    "success": true,
+    "message": "Server restart initiated successfully",
+    "data": {
+      "action_id": "act-001",
+      "status": "in_progress",
+      "estimated_time": "2-3 minutes"
+    }
+  },
+
+  "/api/resources": {
+    "success": true,
+    "data": [
+      {
+        "id": "res-001",
+        "name": "Main Storage Pool",
+        "type": "storage",
+        "allocated": 450,
+        "total": 1000,
+        "available": 550,
+        "unit": "GB",
+        "status": "healthy",
+        "usage_percentage": 45,
+        "servers_using": 15,
+        "cost_per_gb": 0.12
+      },
+      {
+        "id": "res-002",
+        "name": "Database Network",
+        "type": "network",
+        "allocated": 2.5,
+        "total": 10,
+        "available": 7.5,
+        "unit": "Gbps",
+        "status": "healthy",
+        "usage_percentage": 25,
+        "servers_using": 8,
+        "cost_per_gb": 15.0
+      },
+      {
+        "id": "res-003",
+        "name": "Backup Storage",
+        "type": "storage",
+        "allocated": 850,
+        "total": 1000,
+        "available": 150,
+        "unit": "GB",
+        "status": "warning",
+        "usage_percentage": 85,
+        "servers_using": 25,
+        "cost_per_gb": 0.08
+      },
+      {
+        "id": "res-004",
+        "name": "Load Balancer Pool",
+        "type": "compute",
+        "allocated": 12,
+        "total": 20,
+        "available": 8,
+        "unit": "instances",
+        "status": "healthy",
+        "usage_percentage": 60,
+        "servers_using": 3,
+        "cost_per_gb": 45.0
+      }
+    ]
+  },
+
+  " /api/users": {
+    "success": true,
+    "data": [
+      {
+        "id": 1,
+        "username": "admin",
+        "email": "admin@cloudpanel.com",
+        "full_name": "System Administrator",
+        "role": "admin",
+        "status": "active",
+        "last_login": "2024-01-15T09:30:00Z",
+        "created_at": "2023-01-01T00:00:00Z",
+        "permissions": ["read", "write", "delete", "user_management"]
+      },
+      {
+        "id": 2,
+        "username": "developer",
+        "email": "dev@cloudpanel.com",
+        "full_name": "Development Team",
+        "role": "developer",
+        "status": "active",
+        "last_login": "2024-01-14T16:45:00Z",
+        "created_at": "2023-02-15T00:00:00Z",
+        "permissions": ["read", "write"]
+      },
+      {
+        "id": 3,
+        "username": "viewer",
+        "email": "viewer@cloudpanel.com",
+        "full_name": "Read Only User",
+        "role": "viewer",
+        "status": "active",
+        "last_login": "2024-01-13T14:20:00Z",
+        "created_at": "2023-03-01T00:00:00Z",
+        "permissions": ["read"]
+      }
+    ]
+  }
 }
