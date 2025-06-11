@@ -5,5 +5,5 @@ const defaultValue : AuthStateType = null;
 
 const authContext = createContext<AuthStateType>(defaultValue);
 
-export default authContext
+export default authContext;
 

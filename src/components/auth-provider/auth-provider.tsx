@@ -1,34 +1,67 @@
-import { type ReactNode } from "react";
+import { type ReactNode, useCallback, useState } from "react";
 import authContext from "@/contexts/auth-context";
+import storage from "@/services/storage";
+
+type AuthFnHandlerType = ({
+  user,
+  token,
+  refreshToken,
+}: {
+  user: string;
+  token: string;
+  refreshToken: string;
+}) => void;
 
 export type AuthStateType = {
   isLoggedIn: boolean;
   user: string;
   token: string;
   refreshToken: string;
-  login: () => void;
+  setAuth: AuthFnHandlerType;
   logout: () => void;
-  signup: () => void;
 } | null;
 
 type AuthProviderProps = {
   children: ReactNode;
 };
 
+type StateType = NonNullable<Omit<AuthStateType, "setAuth" | "logoutHandler">>;
+
+const initialState: StateType = {
+  isLoggedIn: false,
+  user: "",
+  token: "",
+  refreshToken: "",
+};
+
 export default function AuthProvider({ children }: AuthProviderProps) {
-  const login = () => {};
-  const logout = () => {};
-  const signup = () => {};
+  const [authState, setAuth] = useState<StateType>(initialState);
 
-  const authState : AuthStateType = {
-    isLoggedIn: false,
-    user: "",
-    token: "",
-    refreshToken: "",
-    login,
-    logout,
-    signup
-  };
 
-  return <authContext.Provider value={authState}>{children}</authContext.Provider>;
+  const setAuthHandler: AuthFnHandlerType = useCallback(
+    ({ user, token, refreshToken }) => {
+      setAuth({ isLoggedIn: !!user, user, token, refreshToken });
+      storage.authTokens.set({ token, refreshToken });
+    },
+    []
+  );
+
+  const logoutHandler = useCallback(() => {
+    setAuth(initialState);
+    storage.authTokens.set(null);
+  }, []);
+
+  return (
+    <authContext.Provider
+      value={
+        {
+          ...authState,
+          setAuth: setAuthHandler,
+          logout: logoutHandler,
+        } as AuthStateType
+      }
+    >
+      {children}
+    </authContext.Provider>
+  );
 }

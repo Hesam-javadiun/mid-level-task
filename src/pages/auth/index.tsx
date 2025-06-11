@@ -2,7 +2,7 @@ import type { RouteObject } from "react-router";
 import AuthPage from "./auth-page";
 
 const authRoute: RouteObject = {
-  path: "/auth",
+  path: "/",
   element: <AuthPage />,
 };
 

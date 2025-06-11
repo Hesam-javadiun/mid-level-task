@@ -30,6 +30,7 @@
       "@pages/*": ["src/pages/*"],
       "@contexts/*": ["src/contexts/*"],
       "@hooks/*": ["src/hooks/*"],
+      "@services/*": ["src/services/*"],
     }
   },
   "include": ["src"]
